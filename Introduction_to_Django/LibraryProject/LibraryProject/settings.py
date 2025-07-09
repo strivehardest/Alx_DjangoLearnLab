@@ -131,3 +131,5 @@ INSTALLED_APPS = [
     'bookshelf',  # 👈 Add this line
 ]
 
+'bookshelf',
+
