@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # ✅ Required
-from django.contrib.auth import authenticate, login, logout  # General use
-from django.contrib.auth import login  # ✅ Required (explicitly)
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # ✅ This line is fine
+from django.contrib.auth import authenticate, login, logout
 
 # Function-Based View to list all books
 def list_books(request):
