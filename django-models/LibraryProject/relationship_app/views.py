@@ -69,3 +69,4 @@ def delete_book(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
+
