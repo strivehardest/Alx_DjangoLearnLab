@@ -3,11 +3,6 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # �
 from django.contrib.auth import authenticate, login, logout  # General use
 from django.contrib.auth import login  # ✅ Required (explicitly)
 
-from django.shortcuts import render, get_object_or_404
-from django.views.generic.detail import DetailView
-from .models import Book  # Keep this if needed
-from .models import Library  # 👈 Required explicitly
-
 # Function-Based View to list all books
 def list_books(request):
     books = Book.objects.all()
