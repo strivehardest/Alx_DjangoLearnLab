@@ -7,7 +7,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 
-from .models import Book, Library, UserProfile, Author
+from .models import Library
+from .models import Book, UserProfile, Author
 
 def register(request):
     if request.method == 'POST':
