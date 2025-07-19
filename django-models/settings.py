@@ -128,13 +128,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',  # 👈 Add this line
-]
-
-'bookshelf',
-
-# django-models/settings.py
-INSTALLED_APPS = [
-    ...
+    
+    # Your custom app
     'relationship_app',
 ]
