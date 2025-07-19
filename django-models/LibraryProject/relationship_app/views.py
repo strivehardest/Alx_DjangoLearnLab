@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.detail import DetailView
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .models import Book, Library, UserProfile  # ✅ Includes Library as required
+UserProfile  # ✅ Includes Library as required
 
 # ✅ Registration View (Function-Based)
 def register(request):
@@ -33,6 +33,7 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+from .models import Book, Library
 
 # ✅ Function-Based View to List All Books
 def list_books(request):
