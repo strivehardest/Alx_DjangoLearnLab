@@ -1,31 +1,13 @@
-from django.contrib.auth import login  # ✅ required
-from django.contrib.auth import logout  # ✅ optional but common
-from django.contrib.auth.forms import UserCreationForm  # ✅ required
-from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.detail import DetailView
+from django.contrib.auth.views import LoginView, LogoutView
 
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)  # ✅ using built-in login
-            return redirect('member_view')  # or any other page
-    else:
-        form = AuthenticationForm()
-    return render(request, 'relationship_app/login.html', {'form': form})
+from .models import Book, Library, UserProfile  # ✅ Includes Library as required
 
-def logout_view(request):
-    logout(request)  # ✅ using built-in logout
-    return render(request, 'relationship_app/logout.html')
-
-# In views.py
-
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
-from django.shortcuts import render, redirect
-
+# ✅ Registration View (Function-Based)
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -37,21 +19,7 @@ def register(request):
     return render(request, 'relationship_app/register.html', {'form': form})
 
 
-
-# Function-Based View to list all books
-def list_books(request):
-    books = Book.objects.all()
-    return render(request, 'relationship_app/list_books.html', {'books': books})
-
-# Class-Based View to display a specific library
-class LibraryDetailView(DetailView):
-    model = Library
-    template_name = 'relationship_app/library_detail.html'
-    context_object_name = 'library'
-
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
-from .models import UserProfile
+# ✅ Role-Based Views
 
 @user_passes_test(lambda u: u.is_authenticated and hasattr(u, 'userprofile') and u.userprofile.role == 'Admin')
 def admin_view(request):
@@ -65,3 +33,15 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+
+# ✅ Function-Based View to List All Books
+def list_books(request):
+    books = Book.objects.all()
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
+
+# ✅ Class-Based View to Show Library Detail and Books
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
