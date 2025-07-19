@@ -1,24 +1,25 @@
 import os
 import django
 
-# Setup Django environment
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_models.settings")
+# Set up Django environment
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "LibraryProject.settings")
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
 def run_queries():
-    # Query all books by a specific author
+    # ✅ Query all books by a specific author using .filter(author=author)
     author_name = "Chinua Achebe"
     try:
         author = Author.objects.get(name=author_name)
+        books = Book.objects.filter(author=author)  # 👈 Required line
         print(f"\nBooks by {author.name}:")
-        for book in author.books.all():
+        for book in books:
             print(f"- {book.title}")
     except Author.DoesNotExist:
         print(f"No author found with name '{author_name}'")
 
-    # List all books in a library
+    # ✅ List all books in a library
     library_name = "Central Library"
     try:
         library = Library.objects.get(name=library_name)
@@ -28,7 +29,7 @@ def run_queries():
     except Library.DoesNotExist:
         print(f"No library found with name '{library_name}'")
 
-    # Retrieve the librarian for a library
+    # ✅ Retrieve the librarian for a library
     try:
         librarian = Librarian.objects.get(library__name=library_name)
         print(f"\nLibrarian of {library_name}: {librarian.name}")
