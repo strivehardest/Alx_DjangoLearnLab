@@ -14,29 +14,18 @@ class LibraryDetailView(DetailView):
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+from .models import UserProfile
 
-class UserProfile(models.Model):
-    ROLE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
-    ]
-    
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+@user_passes_test(lambda u: u.is_authenticated and hasattr(u, 'userprofile') and u.userprofile.role == 'Admin')
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
 
-    def __str__(self):
-        return f"{self.user.username} - {self.role}"
+@user_passes_test(lambda u: u.is_authenticated and hasattr(u, 'userprofile') and u.userprofile.role == 'Librarian')
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
 
-# ✅ Signal to auto-create profile
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
+@user_passes_test(lambda u: u.is_authenticated and hasattr(u, 'userprofile') and u.userprofile.role == 'Member')
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
