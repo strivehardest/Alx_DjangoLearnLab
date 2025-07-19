@@ -1,6 +1,35 @@
+from django.contrib.auth import login  # ✅ required
+from django.contrib.auth import logout  # ✅ optional but common
+from django.contrib.auth.forms import UserCreationForm  # ✅ required
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # ✅ This line is fine
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)  # ✅ using built-in login
+            return redirect('member_view')  # or any other page
+    else:
+        form = AuthenticationForm()
+    return render(request, 'relationship_app/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)  # ✅ using built-in logout
+    return render(request, 'relationship_app/logout.html')
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)  # ✅ using built-in form
+        if form.is_valid():
+            user = form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
+
 
 # Function-Based View to list all books
 def list_books(request):
@@ -29,31 +58,3 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.shortcuts import render, redirect
-
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('member_view')  # or any role-based landing page
-    else:
-        form = AuthenticationForm()
-    return render(request, 'relationship_app/login.html', {'form': form})
-
-def logout_view(request):
-    logout(request)
-    return render(request, 'relationship_app/logout.html')
-
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
