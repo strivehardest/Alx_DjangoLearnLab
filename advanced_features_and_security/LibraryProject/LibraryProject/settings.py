@@ -1,3 +1,13 @@
+# settings.py
+
+SECRET_KEY = 'your-secret-key'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
