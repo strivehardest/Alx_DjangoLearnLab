@@ -76,3 +76,6 @@ DEBUG = False
 
 # ✅ Replace with your actual production domain(s)
 ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
+
+# Trust the X-Forwarded-Proto header from the proxy (e.g., NGINX) to identify secure requests
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
