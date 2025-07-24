@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Book List</h1>
+
+    {% if books %}
+        <ul>
+            {% for book in books %}
+                <li><strong>{{ book.title }}</strong> by {{ book.author }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books available.</p>
+    {% endif %}
+
+    <!-- Optional: Add book creation form or links -->
+    <p><a href="{% url 'book_create' %}">Add New Book</a></p>
+</body>
+</html>
