@@ -51,3 +51,28 @@ MIDDLEWARE = [
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'https://trusted-cdn.com')
 CSP_STYLE_SRC = ("'self'", 'https://trusted-cdn.com')
+
+# SECURITY SETTINGS
+
+# ✅ Force all HTTP requests to redirect to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# ✅ HTTP Strict Transport Security (HSTS) — force browsers to use HTTPS only
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow domain to be preloaded into browsers' HSTS list
+
+# ✅ Secure cookies — cookies only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# ✅ Security headers
+X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent content-type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable browser XSS protection
+
+# ✅ Set to False in production
+DEBUG = False
+
+# ✅ Replace with your actual production domain(s)
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
