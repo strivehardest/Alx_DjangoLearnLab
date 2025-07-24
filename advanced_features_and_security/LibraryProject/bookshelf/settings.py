@@ -1,6 +1,6 @@
 
 # Only the relevant part of settings.py is shown
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 INSTALLED_APPS = [
     'accounts',
