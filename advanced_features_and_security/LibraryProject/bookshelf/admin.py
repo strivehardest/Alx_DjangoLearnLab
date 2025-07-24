@@ -4,6 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from django.utils.translation import gettext_lazy as _
 
+admin.site.register(CustomUser, CustomUserAdmin)
+
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
