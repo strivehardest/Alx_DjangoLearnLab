@@ -40,16 +40,15 @@ def book_delete(request, book_id):
 # ✅ Safe ORM query
 books = Book.objects.filter(title__icontains=search_query)
 
-from .forms import BookForm
+from django.shortcuts import render
+from .forms import ExampleForm
 
-def book_create(request):
+def example_form_view(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
-            book = form.save(commit=False)
-            book.user = request.user
-            book.save()
-            return HttpResponse("Book created.")
+            # handle cleaned data here (e.g., send email, save to DB, etc.)
+            return HttpResponse("Form submitted successfully.")
     else:
-        form = BookForm()
-    return render(request, 'bookshelf/book_form.html', {'form': form})
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
