@@ -1,9 +1,12 @@
 
-# Only the relevant part of settings.py is shown
-AUTH_USER_MODEL = 'accounts.CustomUser'
-
 INSTALLED_APPS = [
-    'accounts',
-    'bookshelf',
-    # other apps
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'bookshelf',  # your app with the CustomUser model
 ]
+
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
