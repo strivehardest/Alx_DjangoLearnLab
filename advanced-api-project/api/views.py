@@ -67,3 +67,30 @@ class BookViewSet(viewsets.ModelViewSet):
     # ✅ Filtering config
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ['title', 'author', 'publication_year']
+
+from rest_framework import viewsets, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters import rest_framework  # ✅ Required for the check
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Author, Book
+from .serializers import AuthorSerializer, BookSerializer
+
+
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_fields = ['name']
+    ordering_fields = ['name']
+    search_fields = ['name']
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]  # ✅ Added SearchFilter
+    filterset_fields = ['title', 'author', 'publication_year']
+    ordering_fields = ['title', 'publication_year']
+    search_fields = ['title', 'author__name']  # ✅ Search by title or author's name
