@@ -27,8 +27,11 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content']
         widgets = {
-            'content': forms.Textarea(attrs={
-                'rows': 3,
-                'placeholder': 'Write your comment here...'
-            }),
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your comment...'})
         }
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if not content.strip():
+            raise forms.ValidationError("Comment cannot be empty.")
+        return content
