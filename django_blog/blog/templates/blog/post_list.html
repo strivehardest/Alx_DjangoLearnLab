@@ -13,3 +13,37 @@
         {% endfor %}
     </ul>
 {% endblock %}
+
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<hr>
+
+<h3>Comments</h3>
+{% for comment in comments %}
+    <div>
+        <p><strong>{{ comment.author }}</strong> - {{ comment.created_at|date:"M d, Y H:i" }}</p>
+        <p>{{ comment.content }}</p>
+        {% if request.user == comment.author %}
+            <a href="{% url 'edit_comment' comment.pk %}">Edit</a> |
+            <a href="{% url 'delete_comment' comment.pk %}">Delete</a>
+        {% endif %}
+    </div>
+    <hr>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <h4>Add a comment</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+{% endif %}
+{% endblock %}
