@@ -177,3 +177,12 @@ MESSAGE_TAGS = {
 }
 
 
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Static files settings
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]  # Folder for your CSS/JS/images
+STATIC_ROOT = BASE_DIR / "staticfiles"    # Where collectstatic will store files
