@@ -32,3 +32,14 @@
 <h1>{{ post.title }}</h1>
 <p>{{ post.content }}</p>
 <p><em>By {{ post.author }}</em></p>
+
+{% extends 'blog/base.html' %}
+{% block content %}
+<h1>{{ object.title }}</h1>
+<p>{{ object.content }}</p>
+
+{% if user == object.author %}
+    <a href="{% url 'post_update' object.pk %}">Edit</a>
+    <a href="{% url 'post_delete' object.pk %}">Delete</a>
+{% endif %}
+{% endblock %}

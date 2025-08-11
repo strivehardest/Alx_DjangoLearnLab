@@ -47,3 +47,12 @@
     <p><a href="{% url 'login' %}">Login</a> to comment.</p>
 {% endif %}
 {% endblock %}
+
+{% extends 'blog/base.html' %}
+{% block content %}
+<h1>All Blog Posts</h1>
+{% for post in posts %}
+    <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+    <p>{{ post.content|truncatewords:20 }}</p>
+{% endfor %}
+{% endblock %}
