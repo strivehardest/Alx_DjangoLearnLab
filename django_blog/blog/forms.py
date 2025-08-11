@@ -43,3 +43,15 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']  # include tags field
+
+from django import forms
+from .models import Post
+from taggit.forms import TagWidget  # ✅ import TagWidget
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']  # make sure tags is included
+        widgets = {
+            'tags': TagWidget(),  # ✅ required for tagging check
+        }
