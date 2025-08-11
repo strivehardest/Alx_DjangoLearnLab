@@ -176,5 +176,4 @@ MESSAGE_TAGS = {
     messages.ERROR: 'error',
 }
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+
