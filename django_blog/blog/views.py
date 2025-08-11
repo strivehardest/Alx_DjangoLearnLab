@@ -239,3 +239,22 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'  # you can name this whatever you want
     context_object_name = 'post'
+
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .models import Post
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'blog/post_form.html'
+    fields = ['title', 'content', 'tags']  # include tags if using tagging
+
+class PostUpdateView(UpdateView):
+    model = Post
+    template_name = 'blog/post_form.html'
+    fields = ['title', 'content', 'tags']
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('post_list')  # redirect after delete
