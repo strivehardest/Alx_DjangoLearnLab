@@ -142,3 +142,14 @@ TEMPLATES = [
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        'USER': '',       # SQLite does not use this
+        'PASSWORD': '',   # SQLite does not use this
+        'HOST': '',       # SQLite does not use this
+        'PORT': '',       # SQLite does not use this
+    }
+}
