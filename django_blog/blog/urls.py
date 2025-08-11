@@ -58,4 +58,11 @@ urlpatterns = [
     path('tags/<str:tag_name>/', views.posts_by_tag, name='posts_by_tag'),  # ✅ tag filter
 ]
 
+from django.urls import path
+from .views import PostByTagListView
+
+urlpatterns = [
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='posts_by_tag'),
+]
+
 
