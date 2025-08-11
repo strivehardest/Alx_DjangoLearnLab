@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>My Profile</h2>
+
+{% if request.user.profile.avatar %}
+    <img src="{{ request.user.profile.avatar.url }}" alt="avatar" style="max-width:120px; border-radius:6px;">
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ pform.non_field_errors }}
+    <div>
+        <label for="{{ pform.bio.id_for_label }}">Bio</label><br>
+        {{ pform.bio }}
+        {{ pform.bio.errors }}
+    </div>
+
+    <div>
+        <label for="{{ pform.avatar.id_for_label }}">Avatar</label><br>
+        {{ pform.avatar }}
+        {{ pform.avatar.errors }}
+    </div>
+
+    <button type="submit">Save Profile</button>
+</form>
+{% endblock %}

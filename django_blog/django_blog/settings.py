@@ -153,3 +153,25 @@ DATABASES = {
         'PORT': '',       # SQLite does not use this
     }
 }
+
+# ensure templates are configured with app dirs
+TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.request')
+
+# login redirect & URL
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# media (for avatar uploads)
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# messages (optional styling)
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}
