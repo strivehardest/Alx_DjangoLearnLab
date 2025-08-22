@@ -16,9 +16,10 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "followers_count", "following_count"]
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
-    token = serializers.CharField(read_only=True)  # Include token in response
+    token = serializers.SerializerMethodField()  # dynamically generate token
 
     class Meta:
         model = User
@@ -26,14 +27,18 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        token, _ = Token.objects.get_or_create(user=user)  # Generate token here
-        user.token = token.key  # Attach token to user instance for serializer response
+        Token.objects.get_or_create(user=user)
         return user
+
+    def get_token(self, obj):
+        token, _ = Token.objects.get_or_create(user=obj)
+        return token.key
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
-    token = serializers.CharField(read_only=True)  # Return token after login
+    token = serializers.CharField(read_only=True)  # Will return token after login
 
     def validate(self, attrs):
         user = authenticate(username=attrs.get("username"), password=attrs.get("password"))
@@ -42,5 +47,5 @@ class LoginSerializer(serializers.Serializer):
 
         token, _ = Token.objects.get_or_create(user=user)
         attrs["user"] = user
-        attrs["token"] = token.key  # Attach token for response
+        attrs["token"] = token.key
         return attrs
