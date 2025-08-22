@@ -1,12 +1,9 @@
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions, generics
-from rest_framework.authtoken.models import Token
+from rest_framework import status, permissions
 
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
-
-User = get_user_model()
 
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -15,15 +12,7 @@ class RegisterView(APIView):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token, _ = Token.objects.get_or_create(user=user)
-        return Response(
-            {
-                "message": "User registered successfully.",
-                "token": token.key,
-                "user": UserSerializer(user, context={"request": request}).data,
-            },
-            status=status.HTTP_201_CREATED
-        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -33,19 +22,22 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         login(request, user)
-        token, _ = Token.objects.get_or_create(user=user)
         return Response(
             {
-                "message": "Login successful.",
-                "token": token.key,
-                "user": UserSerializer(user, context={"request": request}).data,
+                "username": user.username,
+                "token": serializer.validated_data["token"]
             },
             status=status.HTTP_200_OK
         )
 
-class ProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = UserSerializer
+class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user
+    def get(self, request):
+        return Response(UserSerializer(request.user).data)
+
+    def patch(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
