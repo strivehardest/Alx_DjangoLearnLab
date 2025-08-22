@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',  # ✅ Required for token auth
     'accounts',
+    'posts',  # ✅ Added posts app
 ]
 
 MIDDLEWARE = [
