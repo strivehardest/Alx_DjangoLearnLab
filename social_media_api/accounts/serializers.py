@@ -1,5 +1,4 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 
 User = get_user_model()
@@ -33,6 +32,6 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, attrs):
         user = authenticate(username=attrs.get("username"), password=attrs.get("password"))
         if not user:
-            raise serializers.ValidationError("Invalid credentials.")
+            raise serializers.ValidationError("Invalid username or password.")
         attrs["user"] = user
         return attrs

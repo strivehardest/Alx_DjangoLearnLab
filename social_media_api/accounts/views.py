@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import login, get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
@@ -18,11 +18,11 @@ class RegisterView(APIView):
         token, _ = Token.objects.get_or_create(user=user)
         return Response(
             {
-                "message": "Registration successful.",
+                "message": "User registered successfully.",
                 "token": token.key,
                 "user": UserSerializer(user, context={"request": request}).data,
             },
-            status=status.HTTP_201_CREATED,
+            status=status.HTTP_201_CREATED
         )
 
 class LoginView(APIView):
@@ -39,7 +39,8 @@ class LoginView(APIView):
                 "message": "Login successful.",
                 "token": token.key,
                 "user": UserSerializer(user, context={"request": request}).data,
-            }
+            },
+            status=status.HTTP_200_OK
         )
 
 class ProfileView(generics.RetrieveUpdateAPIView):
