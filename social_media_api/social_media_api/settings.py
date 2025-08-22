@@ -16,6 +16,8 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+PORT = os.environ.get('PORT', 8000)
+
 SECRET_KEY = "change-me"
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -151,3 +153,4 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 SECURE_SSL_REDIRECT = True
+
