@@ -37,3 +37,23 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+
+from .models import Post
+from .serializers import PostSerializer
+
+CustomUser = get_user_model()
+
+# ✅ Feed View
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        following_users = user.following.all()  # Users the current user follows
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
+
