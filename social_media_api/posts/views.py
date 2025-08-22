@@ -57,3 +57,42 @@ class FeedView(generics.ListAPIView):
         following_users = user.following.all()  # Users the current user follows
         return Post.objects.filter(author__in=following_users).order_by('-created_at')
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
+from .models import Post, Like
+from notifications.utils import create_notification
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def like_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if Like.objects.filter(user=user, post=post).exists():
+        return Response({"message": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+    Like.objects.create(user=user, post=post)
+
+    # Create notification for the post author
+    if post.author != user:
+        create_notification(recipient=post.author, actor=user, verb='liked your post', target=post)
+
+    return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def unlike_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    like = Like.objects.filter(user=user, post=post).first()
+    if not like:
+        return Response({"message": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+    like.delete()
+    return Response({"message": "Post unliked successfully."}, status=status.HTTP_200_OK)
