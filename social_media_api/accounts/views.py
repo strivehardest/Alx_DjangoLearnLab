@@ -11,7 +11,7 @@ class RegisterView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -26,3 +26,10 @@ class LoginView(generics.GenericAPIView):
             "token": serializer.validated_data["token"],
             "username": serializer.validated_data["user"].username
         }, status=status.HTTP_200_OK)
+
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
