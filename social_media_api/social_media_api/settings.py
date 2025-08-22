@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,9 +83,6 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# Media for profile pictures
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -107,9 +105,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
-import os
-from pathlib import Path
-import dj_database_url
 
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'))
@@ -118,10 +113,12 @@ DATABASES = {
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = False
+
 
 # ALLOWED_HOSTS from env (comma separated)
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
+ALLOWED_HOSTS = ['social-media-api-waliu.herokuapp.com', '127.0.0.1', 'localhost']
+
 
 # Database (Heroku provides DATABASE_URL)
 DATABASES = {
@@ -145,7 +142,10 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# DRF, other settings left as they are...
-STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'
 
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
