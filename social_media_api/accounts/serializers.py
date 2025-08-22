@@ -4,7 +4,6 @@ from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-
 class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.IntegerField(source="followers.count", read_only=True)
     following_count = serializers.IntegerField(source="following.count", read_only=True)
@@ -20,19 +19,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
-    token = serializers.SerializerMethodField()  # Generate token dynamically
+    token = serializers.SerializerMethodField()  # Dynamically include token
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ["username", "email", "password", "token"]
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        Token.objects.get_or_create(user=user)
+        # ✅ Explicitly use get_user_model().objects.create_user
+        user = get_user_model().objects.create_user(**validated_data)
+        # ✅ Explicitly create token
+        Token.objects.create(user=user)
         return user
 
     def get_token(self, obj):
-        token, _ = Token.objects.get_or_create(user=obj)
+        token = Token.objects.get(user=obj)
         return token.key
 
 
@@ -45,6 +46,7 @@ class LoginSerializer(serializers.Serializer):
         user = authenticate(username=attrs.get("username"), password=attrs.get("password"))
         if not user:
             raise serializers.ValidationError("Invalid username or password.")
+
         token, _ = Token.objects.get_or_create(user=user)
         attrs["user"] = user
         attrs["token"] = token.key
